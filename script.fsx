@@ -1,13 +1,13 @@
 printf "Testing..."
 
-#load "assignment2.fs"
-open Hw2
+#load "assignment3.fs"
+open Hw3
 
-let make_cubic(a:float,b,c) = fun x -> (x*x*x + a * x*x + b*x + c)
+// let make_cubic(a:float,b,c) = fun x -> (x*x*x + a * x*x + b*x + c)
 
-let result = newton(make_cubic(2.0,-3.0,1.0),0.0,0.0001,0.0001)
+// let result = newton(make_cubic(2.0,-3.0,1.0),0.0,0.0001,0.0001)
 
-let root = newton(sin,5.0,0.0001,0.0001)
+// let root = newton(sin,5.0,0.0001,0.0001)
 // let t1 = Term (3.0,6)
 
 // let p1 = Poly [(3.0,5);(2.0,2);(7.0,1);(1.5,0)]
@@ -56,5 +56,6 @@ let root = newton(sin,5.0,0.0001,0.0001)
 
 // let result1 = upToManySteps (makeRoadMap roadData) 2 (City"Kuito":Destination)
 
+let result = cellToRList c5 |> reverse |> displayList
 
 printf "Done!"

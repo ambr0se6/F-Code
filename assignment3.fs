@@ -34,30 +34,55 @@ let cellToRList (c:Cell):RList = ref (Some c)
 (* This is what you need to code. *)
 //val reverse : lst:RList -> RList
 let reverse (lst: RList) =
-  let mutable curRList = lst
-  let mutable nxtRList = (ref (lst.contents)):RList
-  curRList <- ref None
-  let mutable continU = true;
-  while continU do 
-    match !nxtRList with 
-     | None ->
-     continU <- false 
-     nxtRList <- curRList
-     | Some {data = d; next = ptr} -> curRList <- nxtRList
-     nxtRList <- ptr
-  curRList
+  let mutable prevRList = (ref None):RList
+  while (!lst).Equals(ref None) do
+    let mutable nextRList = lst   
+    (Option.get(lst.contents).next) := !prevRList
+    prevRList := !lst
+    lst := !nextRList
+  prevRList
     
-    
-
-
-let result = cellToRList c5 |> reverse |> displayList
+let result = cellToRList c5 |> reverse 
 
 
 (* Question 2*)
 
 type transaction = Withdraw of int | Deposit of int | CheckBalance | ChangePassword of string | Close
-
-let makeProtectedAccount(openingBalance: int, password: string) = failwith "Not implemented"
+//openingBalance:int * password:string -> (string * transaction -> unit)
+let makeProtectedAccount(openingBalance: int, password: string) = 
+  let balance = ref openingBalance
+  let pswd = ref password
+  let func = ref (fun (t: transaction, password: string) -> ())
+  let closed = fun (t: transaction, password: string) ->
+          match password with
+          | _ when password <> !pswd -> printfn "Incorrect password"
+          | _ when password.Equals(!pswd) -> 
+            match t with
+            | Withdraw(m) ->  printfn "Account closed"
+            | Deposit(m) -> printfn "Account closed"
+            | CheckBalance -> printfn "Account closed"
+            | ChangePassword(s) -> printfn "Account closed"
+            | Close -> printfn "Account closed"
+  let solution = fun (t: transaction, password: string) ->
+    match password with
+    | _ when password <> !pswd -> printfn "Incorrect password"
+    | _ when password.Equals(!pswd) -> 
+      match t with
+      | Withdraw(m) ->  
+        if (!balance > m)
+        then
+          balance := !balance - m
+          printfn "Balance is %i" !balance
+        else
+          printfn "Insufficient funds."
+      | Deposit(m) -> (balance := !balance + m; (printf "Balance is %i\n" !balance))
+      | CheckBalance -> (printf "Balance is %i\n" !balance)
+      | ChangePassword(s) -> pswd := s
+      | Close -> 
+        func := closed
+        printf "Account successfully closed"
+  func := solution
+  !func                  
 
 (* Question 3 *)
 

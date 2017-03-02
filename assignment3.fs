@@ -34,15 +34,16 @@ let cellToRList (c:Cell):RList = ref (Some c)
 (* This is what you need to code. *)
 //val reverse : lst:RList -> RList
 let reverse (lst: RList) =
-  let mutable prevRList = (ref None):RList
-  while (!lst).Equals(ref None) do
-    let mutable nextRList = lst   
-    (Option.get(lst.contents).next) := !prevRList
-    prevRList := !lst
-    lst := !nextRList
-  prevRList
+  let crntRList = ref lst
+  let rec helper(crntRList:RList, prevRList:RList) = 
+    match !crntRList with
+    | None -> prevRList
+    | Some{data = d; next = nextRList} -> 
+      crntRList := Some{data = d; next = prevRList}
+      helper(nextRList, crntRList)
+  helper(lst,(ref None))
     
-let result = cellToRList c5 |> reverse 
+let result = cellToRList c5 |> reverse |> displayList
 
 
 (* Question 2*)
@@ -92,6 +93,8 @@ let makeProtectedAccount(openingBalance: int, password: string) =
 open System.Collections.Generic;;
 
 type ListTree<'a> = Node of 'a * (ListTree<'a> list)
+
+let qt = new Queue<int> ()
 
 let bfIter f ltr = failwith "Not implemented"
 

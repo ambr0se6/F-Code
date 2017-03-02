@@ -52,8 +52,9 @@ type transaction = Withdraw of int | Deposit of int | CheckBalance | ChangePassw
 let makeProtectedAccount(openingBalance: int, password: string) = 
   let balance = ref openingBalance
   let pswd = ref password
-  let func = ref (fun (t: transaction, password: string) -> ())
-  let closed = fun (t: transaction, password: string) ->
+  let mutable dead = false;
+  let func = ref (fun (password: string, t: transaction) -> ())
+  let closed = fun (password: string, t: transaction) ->
           match password with
           | _ when password <> !pswd -> printfn "Incorrect password"
           | _ when password.Equals(!pswd) -> 
@@ -63,7 +64,7 @@ let makeProtectedAccount(openingBalance: int, password: string) =
             | CheckBalance -> printfn "Account closed"
             | ChangePassword(s) -> printfn "Account closed"
             | Close -> printfn "Account closed"
-  let solution = fun (t: transaction, password: string) ->
+  let solution = fun (password: string, t: transaction) ->
     match password with
     | _ when password <> !pswd -> printfn "Incorrect password"
     | _ when password.Equals(!pswd) -> 
@@ -80,8 +81,10 @@ let makeProtectedAccount(openingBalance: int, password: string) =
       | ChangePassword(s) -> pswd := s
       | Close -> 
         func := closed
-        printf "Account successfully closed"
-  func := solution
+        dead <- true
+        printfn "Account successfully closed"
+  if dead then func := solution
+  else func := closed
   !func                  
 
 (* Question 3 *)

@@ -94,9 +94,21 @@ open System.Collections.Generic;;
 
 type ListTree<'a> = Node of 'a * (ListTree<'a> list)
 
-let qt = new Queue<int> ()
+let bfIter f ltr = 
+  let que = new Queue<ListTree<'a>>()
+  que.Enqueue(ltr)
+  while que.Count <> 0 do 
+    let (prnt,chld) = 
+      match que.Dequeue() with
+      | Node(a,b) -> (a,b)
+    f prnt 
+    for i in chld do 
+      let (prnt,chld) = 
+        match i with
+        | Node(a,b) -> (a,b)
+      f prnt 
 
-let bfIter f ltr = failwith "Not implemented"
+
 
 (* Some examples I used for testing.  *)
 let n5 = Node(5,[])

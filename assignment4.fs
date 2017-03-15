@@ -7,13 +7,27 @@ type term =
 
 (* invariant for substitutions: *)
 (* no id on a lhs occurs in any term earlier in the list *)
+//val subst : s:term -> x:id -> t:term -> term
 type substitution = (id * term) list
 
 (* check if a variable occurs in a term *)
-let rec occurs (x : id) (t : term) : bool = failwith "Not implemented"
+//val occurs : x:id -> t:term -> bool
+let rec occurs (x : id) (t : term) : bool =
+    let yesNo = ref false
+    match t with 
+    | Const constant -> !yesNo
+    | x -> 
+        yesNo := true
+        !yesNo
+    | Var variable -> !yesNo
+    | Term (fSymbol, tList) -> 
+        for turm in tList 
+            occurs (x)(turm)
 
 (* substitute term s for all occurrences of variable x in term t *)
-let rec subst (s : term) (x : id) (t : term) : term = failwith "Not implemented"
+let rec subst (s : term) (x : id) (t : term) : term = 
+
+    
 
 
 (* apply a substitution right to left; use foldBack *)
@@ -24,7 +38,7 @@ let apply (s : substitution) (t : term) : term = failwith "Not implemented"
 let rec unify (s : term) (t : term) : substitution = failwith "Not implemented"
 
 (* unify a list of pairs *)
-and unify_list (s : (term * term) list) : substitution = failwith "Not implemented"
+let unify_list (s : (term * term) list):substitution = failwith "Not implemented"
 
 (*
 Examples

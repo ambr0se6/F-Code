@@ -7,25 +7,28 @@ type term =
 
 (* invariant for substitutions: *)
 (* no id on a lhs occurs in any term earlier in the list *)
-//val subst : s:term -> x:id -> t:term -> term
+
 type substitution = (id * term) list
+
 
 (* check if a variable occurs in a term *)
 //val occurs : x:id -> t:term -> bool
 let rec occurs (x : id) (t : term) : bool =
-    let yesNo = ref false
-    match t with 
-    | Const constant -> !yesNo
-    | x -> 
-        yesNo := true
-        !yesNo
-    | Var variable -> !yesNo
-    | Term (fSymbol, tList) -> 
-        for turm in tList 
-            occurs (x)(turm)
+  match t with 
+  | t when t.Equals(Var x) -> true
+  | Term (fSymbol, tList) -> List.exists (fun elem -> occurs(x)(elem)) tList
+  | t -> false
+
+(*let t1 = Term("f",[Var "x";Var "y"; Term("h",[Var "x"])])
+let result = occurs("x")(t1)*)
 
 (* substitute term s for all occurrences of variable x in term t *)
+//val subst : s:term -> x:id -> t:term -> term
 let rec subst (s : term) (x : id) (t : term) : term = 
+  match t with 
+  | t when 
+
+
 
     
 
